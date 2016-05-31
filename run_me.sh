@@ -8,4 +8,5 @@ echo "ALL      ALL = (ALL) NOPASSWD: ALL"\
 #Creating a stack user 
 sudo python create-stack-user.py
 sudo su stack
-cd ~/
+cd ~
+git clone https://github.com/openstack-dev/devstack.git
