@@ -1,12 +1,27 @@
 #!/bin/bash
 set -eux
 
-# Give passwordless sudo privileges to all users
-echo "ALL      ALL = (ALL) NOPASSWD: ALL"\
-> /etc/sudoers
+#append the below line to give nopasswd privileges for all users
+cat <<EOT >> /etc/sudoers
+ALL      ALL = (ALL) NOPASSWD: ALL
+EOT
 
-#Creating a stack user 
-sudo python create-stack-user.py
-sudo su stack
-cd ~
-git clone https://github.com/openstack-dev/devstack.git
+#Creating a stack user.
+sudo python python-scripts.py create_stack_user
+
+#clone the devstack repo from the github
+sudo python python-scripts.py clone_devstack
+
+
+if [ $# -eq 0 ]
+then
+export project="cinder"
+else
+project=$1
+fi
+
+#copy the appropriate loacl.conf file
+sudo python python-scripts.py copy_local_conf $project
+
+#run stack.sh file
+sudo python python-scripts.py run_stack
